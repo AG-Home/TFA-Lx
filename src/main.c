@@ -31,6 +31,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+static GPIO_InitTypeDef  GPIO_InitStruct;
+
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
@@ -59,15 +61,22 @@ int main(void)
   /* Configure the System clock to have a frequency of 2 MHz (Up to 32MHZ possible) */
   SystemClock_Config();
 
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /* Add your application code here
-  
-  
-  */
+  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull  = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 
   /* Infinite loop */
   while (1)
   {
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+    /* Insert delay 500 ms */
+    HAL_Delay(500);
   }
 }
 /**
