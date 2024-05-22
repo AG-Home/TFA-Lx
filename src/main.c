@@ -32,6 +32,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static GPIO_InitTypeDef  GPIO_InitStruct;
+static GPIO_InitTypeDef  GPIO_InitStruct2;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -63,12 +64,20 @@ int main(void)
 
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
+  // LED = Pin3 PortB
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull  = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-
   GPIO_InitStruct.Pin = GPIO_PIN_3;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct2.Pin = GPIO_PIN_1;
+  GPIO_InitStruct2.Pull = GPIO_PULLUP;
+  GPIO_InitStruct2.Mode = GPIO_MODE_IT_FALLING; 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct2);
+
+  NVIC_SetPriority((IRQn_Type)(EXTI0_1_IRQn), 0x03);
+  HAL_NVIC_EnableIRQ((IRQn_Type)(EXTI0_1_IRQn));
 
 
   /* Infinite loop */

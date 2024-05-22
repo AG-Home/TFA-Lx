@@ -65,9 +65,9 @@ uint32_t vector_table[] __attribute__ ((section(".isr_vector"))) =
   (uint32_t)&Default_Handler,   /* RTC through EXTI Line */
   (uint32_t)&Default_Handler,   /* FLASH */
   (uint32_t)&Default_Handler,   /* RCC */
-  (uint32_t)&Default_Handler,   /* EXTI Line 0 and 1 */
+  (uint32_t)&EXTI0_1_IRQHandler,   /* EXTI Line 0 and 1 */
   (uint32_t)&Default_Handler,   /* EXTI Line 2 and 3 */
-  (uint32_t)&Default_Handler,   /* EXTI Line 4 to 15 */
+  (uint32_t)&EXTI4_15_IRQHandler, /* EXTI Line 4 to 15 */
   (uint32_t)0,                  /* Reserved */
   (uint32_t)&Default_Handler,   /* DMA1 Channel 1 */
   (uint32_t)&Default_Handler,   /* DMA1 Channel 2 and Channel 3 */
