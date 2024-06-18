@@ -48,6 +48,8 @@ static void Error_Handler(void);
 int main(void)
 {
 
+  static uint8_t u_cntr;
+
   /* STM32L0xx HAL library initialization:
        - Configure the Flash prefetch, Flash preread and Buffer caches
        - Systick timer is configured by default as source of time base, but user 
@@ -63,6 +65,7 @@ int main(void)
   SystemClock_Config();
 
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
   // LED = Pin3 PortB
   GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -71,11 +74,14 @@ int main(void)
   GPIO_InitStruct.Pin = GPIO_PIN_3;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  GPIO_InitStruct2.Pin = GPIO_PIN_1;
+  GPIO_InitStruct2.Mode  = GPIO_MODE_INPUT;
+  GPIO_InitStruct2.Pin = GPIO_PIN_9;
   GPIO_InitStruct2.Pull = GPIO_PULLUP;
   GPIO_InitStruct2.Mode = GPIO_MODE_IT_FALLING; 
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct2);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct2);
 
+  NVIC_SetPriority((IRQn_Type)(EXTI4_15_IRQn), 0x03);
+  HAL_NVIC_EnableIRQ((IRQn_Type)(EXTI4_15_IRQn));
   NVIC_SetPriority((IRQn_Type)(EXTI0_1_IRQn), 0x03);
   HAL_NVIC_EnableIRQ((IRQn_Type)(EXTI0_1_IRQn));
 
@@ -83,9 +89,20 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+    // u_cntr++;
+    // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
     /* Insert delay 500 ms */
-    HAL_Delay(500);
+    // HAL_Delay(500);
+    // if(u_cntr == 10)
+    // {
+    //   u_cntr = 0;
+    //   /*Suspend Tick increment to prevent wakeup by Systick interrupt. 
+    //   Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base)*/
+    //   HAL_SuspendTick();
+    //   HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    //   /* Resume Tick interrupt if disabled prior to SLEEP mode entry */
+    //   HAL_ResumeTick();
+    // }
   }
 }
 /**
@@ -149,6 +166,17 @@ static void Error_Handler(void)
   /* User may add here some code to deal with this error */
   while(1)
   {
+  }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  uint32_t tmp;
+  tmp = SYSCFG->EXTICR[3];
+
+  if(GPIO_Pin == GPIO_PIN_9)
+  {
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
   }
 }
 
