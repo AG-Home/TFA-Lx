@@ -89,20 +89,20 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-    // u_cntr++;
-    // HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
+    u_cntr++;
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
     /* Insert delay 500 ms */
-    // HAL_Delay(500);
-    // if(u_cntr == 10)
-    // {
-    //   u_cntr = 0;
-    //   /*Suspend Tick increment to prevent wakeup by Systick interrupt. 
-    //   Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base)*/
-    //   HAL_SuspendTick();
-    //   HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-    //   /* Resume Tick interrupt if disabled prior to SLEEP mode entry */
-    //   HAL_ResumeTick();
-    // }
+    HAL_Delay(500);
+    if(u_cntr == 10)
+    {
+      u_cntr = 0;
+      /*Suspend Tick increment to prevent wakeup by Systick interrupt. 
+      Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base)*/
+      HAL_SuspendTick();
+      HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+      /* Resume Tick interrupt if disabled prior to SLEEP mode entry */
+      HAL_ResumeTick();
+    }
   }
 }
 /**
@@ -174,7 +174,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   uint32_t tmp;
   tmp = SYSCFG->EXTICR[3];
 
-  if(GPIO_Pin == GPIO_PIN_9)
+  if((GPIO_Pin == GPIO_PIN_9) && (tmp==0))
   {
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
   }

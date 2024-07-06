@@ -123,6 +123,8 @@ void SysTick_Handler(void)
   */
 void EXTI4_15_IRQHandler(void)
 {
+  uint32_t tmp;
+  tmp = SYSCFG->EXTICR[3];
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 }
